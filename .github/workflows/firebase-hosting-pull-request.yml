@@ -15,3 +15,4 @@ jobs:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_RE_READ_58912 }}'
           projectId: re-read-58912
+          entryPoint: "./Prototype" 
