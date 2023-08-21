@@ -1,0 +1,11 @@
+{
+  "name": "prototype",
+  "version": "1.0.0",
+  "description": "An innovative business model that recycles and sells second hand books to promote a more sustainable way to the evergreen activity of reading!",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Pranav Verma, Neil Arora",
+  "license": "MIT"
+}
