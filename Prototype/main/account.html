@@ -9,9 +9,13 @@
   <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-database-compat.js"></script>
+  <script src="https://apis.google.com/js/platform.js" async defer></script>
   <link href="CSS-JS/Account/style.css" rel="stylesheet">
   <title>Account</title>
   <link rel="icon" type="image/x-icon" href="../../Images/logo.png">
+
+  <meta name="google-signin-client_id" content="575945793204-a9t0ihinmkfhknjbpmqjm60bmg313ci7.apps.googleusercontent.com">
+
   <style>
     /* Add custom styles for the login form */
     .login-form {
@@ -133,6 +137,14 @@
             <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Sign In</button>
             </div>  
             <p v-if="!showSignUp" class="mt-2 text-gray-600">Don't have an account? <a href="#" @click="showSignUpForm">Sign Up</a></p>
+
+            <br><hr>
+            <p><center>OR</center></p>
+            <hr><br>
+            <button @click="signInWithGoogle" class="bg-red-600 text-white px-4 py-2 rounded-md">
+              Sign in with Google
+            </button>
+
             <div v-if="showSignUp">
 
 
@@ -215,6 +227,18 @@
             })
             .catch(error => {
               console.error("Sign-in error:", error.message);
+            });
+        },
+        signInWithGoogle() {
+          const provider = new firebase.auth.GoogleAuthProvider();
+          firebase.auth().signInWithPopup(provider)
+            .then(result => {
+              // User signed in with Google
+              this.user = result.user;
+              this.totalBooksSold = 0; // Reset books sold data (if needed)
+            })
+            .catch(error => {
+              console.error("Google sign-in error:", error.message);
             });
         },
         signUpWithEmail() {
