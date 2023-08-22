@@ -8,8 +8,10 @@
   <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-database-compat.js"></script>
   <link href="CSS-JS/Account/style.css" rel="stylesheet">
-
+  <title>Account</title>
+  <link rel="icon" type="image/x-icon" href="../../Images/logo.png">
   <style>
     /* Add custom styles for the login form */
     .login-form {
@@ -155,14 +157,14 @@
 
   <script>
     const config = {
-        apiKey: "AIzaSyCnQWYmADqtZa5kU3MsgCuewqGI1B2OBvY",
-        authDomain: "re-read-58912.firebaseapp.com",
-        databaseURL: "https://re-read-58912-default-rtdb.firebaseio.com",
-        projectId: "re-read-58912",
-        storageBucket: "re-read-58912.appspot.com",
-        messagingSenderId: "575945793204",
-        appId: "1:575945793204:web:f0a2265bb56b70f94dc1e1",
-        measurementId: "G-R8L5CS75XK"
+      apiKey: "AIzaSyCnQWYmADqtZa5kU3MsgCuewqGI1B2OBvY",
+      authDomain: "re-read-58912.firebaseapp.com",
+      databaseURL: "https://re-read-58912-default-rtdb.firebaseio.com",
+      projectId: "re-read-58912",
+      storageBucket: "re-read-58912.appspot.com",
+      messagingSenderId: "575945793204",
+      appId: "1:575945793204:web:f0a2265bb56b70f94dc1e1",
+      measurementId: "G-R8L5CS75XK"
     };
 
     firebase.initializeApp(config);
@@ -173,7 +175,7 @@
           user: null,
           email: "",
           password: "",
-          totalBooksSold: 1537,
+          totalBooksSold: 0,
           signupEmail: "",
           signupPassword: "",
           showSignUp: false
@@ -186,6 +188,20 @@
         checkAuthState() {
           firebase.auth().onAuthStateChanged(user => {
             this.user = user;
+            if (user) {
+              const userUid = user.uid;
+              const database = firebase.database();
+              database.ref('users/' + userUid).once('value')
+                .then(snapshot => {
+                  const userData = snapshot.val();
+                  if (userData) {
+                    this.totalBooksSold = userData.totalBooksSold || 0;
+                  }
+                })
+                .catch(error => {
+                  console.error("Error fetching user data:", error.message);
+                });
+            }
           });
         },
         showSignUpForm() {
@@ -204,16 +220,16 @@
         signUpWithEmail() {
         firebase.auth().createUserWithEmailAndPassword(this.signupEmail, this.signupPassword)
           .then(userCredential => {
-            // Clear sign-up form fields
+
             this.signupEmail = "";
             this.signupPassword = "";
 
-            // Create a new entry in the Realtime Database associated with the user's UID
+
             const userUid = userCredential.user.uid;
             const database = firebase.database();
             database.ref('users/' + userUid).set({
-              email: this.signupEmail,
-              totalBooksPurchased: 0 // You can set any initial data here
+              totalBooksPurchased: 0, // You can set any initial data here
+              totalBooksSold: 0
             });
           })
           .catch(error => {
