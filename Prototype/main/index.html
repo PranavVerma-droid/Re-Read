@@ -8,120 +8,152 @@
     <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore-compat.js"></script>
-    <!-- Additional styles for navbar and mobile support -->
-    <style>
-      .navbar {
-        background-color: #fff;
-        box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 16px 40px;
-      }
-      .footer {
-        background-color: #333;
-        color: white;
-        padding: 20px;
-        text-align: center;
-      }
-      .navbar-logo {
-        font-size: 24px;
-        font-weight: bold;
-        color: #333;
-        text-decoration: none;
-      }
-      .navbar-items {
-        list-style: none;
-        display: flex;
-        gap: 20px;
-      }
-      .navbar-item {
-        font-size: 16px;
-        color: #333;
-        text-decoration: none;
-        transition: color 0.3s ease-in-out;
-      }
-      .navbar-item:hover {
-        color: #f56565;
-      }
-      @media (max-width: 768px) {
-        .navbar {
-          padding: 16px 20px;
-        }
-        .navbar-logo {
-          font-size: 20px;
-        }
-        .navbar-items {
-          display: none;
-          flex-direction: column;
-          position: absolute;
-          top: 64px;
-          left: 0;
-          width: 100%;
-          background-color: #fff;
-          box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-        }
-        .navbar-open {
-          display: flex;
-        }
-        .navbar-item {
-          padding: 12px 20px;
-          color: #333;
-          text-align: center;
-        }
-      }
-    </style>
+    <link rel="stylesheet" href="CSS-JS/Home/style.css">
   </head>
-  <body style="background-color: #f6e6ea;">
+  <body style="background-color: #f6e6ea;" id="app">
     <nav class="navbar">
-      <a href="index.html" class="navbar-logo">Your Brand</a>
+      <a href="index.html" class="navbar-logo">Re:Read</a>
+
+      <div class="relative mx-4">
+        <form action="" method="get" class="relative mx-4">
+          <input v-model="searchQuery" type="text" name="query" placeholder="Search..." class="px-4 py-2 pr-12 rounded-full outline-none bg-gray-100">
+          <button type="submit" class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-600 focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+              <path d="M21 21l-6 -6"></path>
+           </svg>
+          </button>
+        </form>
+      </div>
+
       <ul class="navbar-items">
         <li><a href="index.html" class="navbar-item">Home</a></li>
-        <li><a href="about.html" class="navbar-item">About</a></li>
-        <li><a href="projects.html" class="navbar-item">Projects</a></li>
-        <li><a href="blogs.html" class="navbar-item">Blogs</a></li>
-        <li><a href="mcserver.html" class="navbar-item">Server</a></li>
-        <li><a href="contact.html" class="navbar-item">Contact</a></li>
+        <li><a href="" class="navbar-item">All Genre</a></li>
+        <li><a href="" class="navbar-item">Manga</a></li>
+        <li><a href="" class="navbar-item">Fiction</a></li>
+        <li><a href="" class="navbar-item">Non Fiction</a></li>
+        <li><a href="" class="navbar-item">Contact</a></li>
       </ul>
+
+      <div class="flex items-center space-x-4">
+        <a href="account.html" class="text-gray-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"></path>
+            <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+         </svg>
+        </a>
+        <a href="#" class="text-gray-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-shopping-cart" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+            <path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+            <path d="M17 17h-11v-14h-2"></path>
+            <path d="M6 5l14 1l-1 7h-13"></path>
+         </svg>
+        </a>
+      </div>
+
       <div class="md:hidden">
-        <button id="navbar-toggle" class="text-gray-600 focus:outline-none">
-          <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" class="menu w-6 h-6">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path>
-          </svg>
+        <button @click="toggleNavbar" class="text-gray-600">
+          <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-deep" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" style="transform: translateY(0.5vh);">
+            <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+            <path d="M4 6h16"></path>
+            <path d="M7 12h13"></path>
+            <path d="M10 18h10"></path>
+         </svg>
         </button>
       </div>
     </nav>
 
-    <div class="py-8 px-4 md:px-8">
+   <!-- <div class="py-8 px-4 md:px-8">
       <h2 class="text-2xl font-semibold mb-4">Featured Products</h2>
       <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Add your product cards here -->
-        <div class="bg-white p-4 shadow-md rounded-lg">
-          <h3 class="text-lg font-semibold mb-2">Product 1</h3>
-          <p class="text-gray-600">Description of product 1.</p>
+        <div
+          v-for="product in featuredProducts"
+          :key="product.id"
+          class="bg-white p-4 shadow-md rounded-lg"
+        >
+          <h3 class="text-lg font-semibold mb-2">{{ product.title }}</h3>
+          <p class="text-gray-600">{{ product.description }}</p>
           <button class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md">Add to Cart</button>
         </div>
-        <div class="bg-white p-4 shadow-md rounded-lg">
-          <h3 class="text-lg font-semibold mb-2">Product 2</h3>
-          <p class="text-gray-600">Description of product 2.</p>
+      </div>
+    </div> -->
+
+    <div class="py-8 px-4 md:px-8">
+      <h2 class="text-2xl font-semibold mb-4">All Books</h2>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div
+          v-for="product in allProducts"
+          :key="product.id"
+          class="bg-white p-4 shadow-md rounded-lg"
+        >
+          <h3 class="text-lg font-semibold mb-2">{{ product.title }}</h3>
+          <p class="text-gray-600">{{ product.description }}</p>
           <button class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md">Add to Cart</button>
         </div>
-        <!-- Add more products as needed -->
       </div>
     </div>
+
+
     
     <!-- Footer -->
     <div class="footer">
-      <p>&copy; 2023 Your Website. All rights reserved.</p>
+      <p>&copy; 2023 Re:Read. All rights reserved.</p>
     </div>
-    
     <script>
-      const toggleButton = document.getElementById("navbar-toggle");
-      const navbarItems = document.querySelector(".navbar-items");
-
-      toggleButton.addEventListener("click", () => {
+      const config = {
+        apiKey: "AIzaSyCnQWYmADqtZa5kU3MsgCuewqGI1B2OBvY",
+        authDomain: "re-read-58912.firebaseapp.com",
+        databaseURL: "https://re-read-58912-default-rtdb.firebaseio.com",
+        projectId: "re-read-58912",
+        storageBucket: "re-read-58912.appspot.com",
+        messagingSenderId: "575945793204",
+        appId: "1:575945793204:web:f0a2265bb56b70f94dc1e1",
+        measurementId: "G-R8L5CS75XK"
+      };
+      
+      firebase.initializeApp(config);
+      const db = firebase.firestore();
+      
+      const app = Vue.createApp({
+        data() {
+          return {
+            featuredProducts: [],
+            allProducts: [],
+          };
+        },
+        created() {
+          this.loadBooks("featured_books", "featuredProducts");
+          this.loadBooks("all_books", "allProducts");
+        },
+        methods: {
+          loadBooks(collectionName, targetArray) {
+            db.collection(collectionName).get().then(querySnapshot => {
+              const products = [];
+              querySnapshot.forEach(doc => {
+                const data = doc.data();
+                products.push({
+                  id: doc.id,
+                  title: data.title,
+                  description: data.description
+                });
+              });
+              this[targetArray] = products;
+            });
+          },
+          toggleNavbar() {
+        const navbarItems = document.querySelector(".navbar-items");
         navbarItems.classList.toggle("navbar-open");
-      });
+      }
+      }
+    });
+
+      
+      app.mount("#app");
     </script>
+    
   </body>
 </html>

@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+  <title>Search Results</title>
+</head>
+<body style="background-color: #f6e6ea;">
+
+    <div class="py-8 px-4 md:px-8">
+        <h2 class="text-2xl font-semibold mb-4">Search Results</h2>
+        <p>Showing results for: {{ searchQuery }}</p>
+    
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div
+            v-for="product in filteredProducts"
+            :key="product.id"
+            class="bg-white p-4 shadow-md rounded-lg"
+          >
+            <h3 class="text-lg font-semibold mb-2">{{ product.title }}</h3>
+            <p class="text-gray-600">{{ product.description }}</p>
+            <button class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+</body>
+</html>
+
+<script>
+    const searchParams = new URLSearchParams(window.location.search);
+    const query = searchParams.get('query');
+  
+    const config = {
+        apiKey: "AIzaSyCnQWYmADqtZa5kU3MsgCuewqGI1B2OBvY",
+        authDomain: "re-read-58912.firebaseapp.com",
+        databaseURL: "https://re-read-58912-default-rtdb.firebaseio.com",
+        projectId: "re-read-58912",
+        storageBucket: "re-read-58912.appspot.com",
+        messagingSenderId: "575945793204",
+        appId: "1:575945793204:web:f0a2265bb56b70f94dc1e1",
+        measurementId: "G-R8L5CS75XK"
+    };
+  
+    firebase.initializeApp(config);
+    const db = firebase.firestore();
+  
+    const app = Vue.createApp({
+      data() {
+        return {
+          searchQuery: query || '',
+          allProducts: [], // Initialize as empty
+        };
+      },
+      created() {
+        this.loadAllProducts();
+      },
+      methods: {
+        loadAllProducts() {
+          db.collection("all_books").get().then(querySnapshot => {
+            const products = [];
+            querySnapshot.forEach(doc => {
+              const data = doc.data();
+              products.push({
+                id: doc.id,
+                title: data.title,
+                description: data.description
+              });
+            });
+            this.allProducts = products;
+          });
+        }
+      },
+      computed: {
+        filteredProducts() {
+          return this.allProducts.filter(product => product.title.toLowerCase().includes(this.searchQuery.toLowerCase()));
+        }
+      }
+    });
+  
+    app.mount("#app");
+  </script>

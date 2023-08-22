@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-firestore-compat.js"></script>
+  <link href="CSS-JS/Account/style.css" rel="stylesheet">
+
+  <style>
+    /* Add custom styles for the login form */
+    .login-form {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+      background-color: #ffffff;
+      border-radius: 8px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .login-form label {
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    .login-form input {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 12px;
+    }
+
+    .login-form button {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #3490dc;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .login-form button:hover {
+      background-color: #2779bd;
+    }
+  </style>
+</head>
+<body style="background-color: #f6e6ea;">
+  <div id="app-account" class="account-container">
+    <nav class="navbar">
+        <a href="index.html" class="navbar-logo">Re:Read</a>
+  
+        <div class="relative mx-4">
+          <input type="text" placeholder="Search..." class="px-4 py-2 pr-12 rounded-full outline-none bg-gray-100">
+          <button class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-600 focus:outline-none">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M10 10m-7 0a7 7 0 1 0 14 0a7 7 0 1 0 -14 0"></path>
+              <path d="M21 21l-6 -6"></path>
+           </svg>
+          </button>
+        </div>
+  
+        <ul class="navbar-items">
+          <li><a href="index.html" class="navbar-item">Home</a></li>
+          <li><a href="" class="navbar-item">All Genre</a></li>
+          <li><a href="" class="navbar-item">Manga</a></li>
+          <li><a href="" class="navbar-item">Fiction</a></li>
+          <li><a href="" class="navbar-item">Non Fiction</a></li>
+          <li><a href="" class="navbar-item">Contact</a></li>
+        </ul>
+  
+        <div class="flex items-center space-x-4">
+          <a href="account.html" class="text-gray-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M8 7a4 4 0 1 0 8 0a4 4 0 0 0 -8 0"></path>
+              <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2"></path>
+           </svg>
+          </a>
+          <a href="#" class="text-gray-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-shopping-cart" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M6 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+              <path d="M17 19m-2 0a2 2 0 1 0 4 0a2 2 0 1 0 -4 0"></path>
+              <path d="M17 17h-11v-14h-2"></path>
+              <path d="M6 5l14 1l-1 7h-13"></path>
+           </svg>
+          </a>
+        </div>
+  
+        <div class="md:hidden">
+          <button @click="toggleNavbar" class="text-gray-600">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-menu-deep" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round" style="transform: translateY(0.5vh);">
+              <path stroke="none" d="M0 0h24v24H0z" fill="none"></path>
+              <path d="M4 6h16"></path>
+              <path d="M7 12h13"></path>
+              <path d="M10 18h10"></path>
+           </svg>
+          </button>
+        </div>
+      </nav><br>
+
+
+
+      <div class="login-form">
+        <h2 class="text-2xl font-semibold mb-4">Account Page</h2>
+        <div v-if="user">
+          <p class="text-gray-600">Welcome <b>{{ user.email }}</b></p>
+          <button @click="signOut" class="mt-4 bg-red-500 text-white px-4 py-2 rounded-md">Sign Out</button>
+          <br>
+          <p class="text-gray-600">Total books sold: <b>{{ totalBooksSold }}</b></p>
+        </div>
+        <div v-else>
+          <form @submit.prevent="signInWithEmail">
+            <div v-if="!showSignUp">
+            <div class="mb-4">
+              <label for="email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+              <input v-model="email" type="email" id="email" class="border rounded w-full py-2 px-3" required>
+            </div>
+            <div class="mb-4">
+              <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+              <input v-model="password" type="password" id="password" class="border rounded w-full py-2 px-3" required>
+            </div>
+            <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded-md">Sign In</button>
+            </div>  
+            <p v-if="!showSignUp" class="mt-2 text-gray-600">Don't have an account? <a href="#" @click="showSignUpForm">Sign Up</a></p>
+            <div v-if="showSignUp">
+
+
+              <div class="mb-4">
+                <label for="signup-email" class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                <input v-model="signupEmail" type="email" id="signup-email" class="border rounded w-full py-2 px-3" required>
+              </div>
+              <div class="mb-4">
+                <label for="signup-password" class="block text-gray-700 text-sm font-bold mb-2">Password:</label>
+                <input v-model="signupPassword" type="password" id="signup-password" class="border rounded w-full py-2 px-3" required>
+              </div>
+              <button @click="signUpWithEmail()" type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md">Sign Up</button>
+            </div>
+          </form>
+        </div>
+      </div><br>
+
+    <div class="footer">
+      <p>&copy; 2023 Re:Read. All rights reserved.</p>
+    </div>
+  </div>
+
+  <script>
+    const config = {
+        apiKey: "AIzaSyCnQWYmADqtZa5kU3MsgCuewqGI1B2OBvY",
+        authDomain: "re-read-58912.firebaseapp.com",
+        databaseURL: "https://re-read-58912-default-rtdb.firebaseio.com",
+        projectId: "re-read-58912",
+        storageBucket: "re-read-58912.appspot.com",
+        messagingSenderId: "575945793204",
+        appId: "1:575945793204:web:f0a2265bb56b70f94dc1e1",
+        measurementId: "G-R8L5CS75XK"
+    };
+
+    firebase.initializeApp(config);
+
+    const app = Vue.createApp({
+      data() {
+        return {
+          user: null,
+          email: "",
+          password: "",
+          totalBooksSold: 1537,
+          signupEmail: "",
+          signupPassword: "",
+          showSignUp: false
+        };
+      },
+      created() {
+        this.checkAuthState();
+      },
+      methods: {
+        checkAuthState() {
+          firebase.auth().onAuthStateChanged(user => {
+            this.user = user;
+          });
+        },
+        showSignUpForm() {
+      this.showSignUp = true;
+        },
+        signInWithEmail() {
+          firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+            .then(() => {
+              this.email = "";
+              this.password = "";
+            })
+            .catch(error => {
+              console.error("Sign-in error:", error.message);
+            });
+        },
+        signUpWithEmail() {
+        firebase.auth().createUserWithEmailAndPassword(this.signupEmail, this.signupPassword)
+          .then(userCredential => {
+            // Clear sign-up form fields
+            this.signupEmail = "";
+            this.signupPassword = "";
+
+            // Create a new entry in the Realtime Database associated with the user's UID
+            const userUid = userCredential.user.uid;
+            const database = firebase.database();
+            database.ref('users/' + userUid).set({
+              email: this.signupEmail,
+              totalBooksPurchased: 0 // You can set any initial data here
+            });
+          })
+          .catch(error => {
+            console.error("Sign-up error:", error.message);
+          });
+      },  signOut() {
+          firebase.auth().signOut()
+            .then(() => {
+              this.user = null;
+            })
+            .catch(error => {
+              console.error("Sign-out error:", error.message);
+            });
+        },
+        toggleNavbar() {
+        const navbarItems = document.querySelector(".navbar-items");
+        navbarItems.classList.toggle("navbar-open");
+      }
+      }
+    });
+
+    app.mount("#app-account");
+  </script>
+</body>
+</html>
