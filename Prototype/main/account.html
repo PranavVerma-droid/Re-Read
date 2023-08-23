@@ -188,6 +188,7 @@
           email: "",
           password: "",
           totalBooksSold: 0,
+          totalBooksPurchased: 0,
           signupEmail: "",
           signupPassword: "",
           showSignUp: false
@@ -233,19 +234,24 @@
           const provider = new firebase.auth.GoogleAuthProvider();
           firebase.auth().signInWithPopup(provider)
             .then(result => {
-              
-            this.signupEmail = "";
-            this.signupPassword = "";
+              this.signupEmail = "";
+              this.signupPassword = "";
 
+              const userUid = result.user.uid;
+              const database = firebase.database();
 
-            const userUid = result.user.uid;
-            const database = firebase.database();
-
-            database.ref('users/' + userUid).set({
-              totalBooksPurchased: 0, // You can set any initial data here
-              totalBooksSold: 0
-            });
-
+              database.ref('users/' + userUid).once('value')
+                .then(snapshot => {
+                  if (!snapshot.exists()) {
+                    database.ref('users/' + userUid).set({
+                      totalBooksPurchased: 0,
+                      totalBooksSold: 0
+                    });
+                  }
+                })
+                .catch(error => {
+                  console.error("Error checking user data:", error.message);
+                });
             })
             .catch(error => {
               console.error("Google sign-in error:", error.message);
