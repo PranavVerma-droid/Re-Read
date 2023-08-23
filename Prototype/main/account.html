@@ -234,8 +234,6 @@
           const provider = new firebase.auth.GoogleAuthProvider();
           firebase.auth().signInWithPopup(provider)
             .then(result => {
-
-
               const userUid = result.user.uid;
               const database = firebase.database();
 
@@ -243,20 +241,18 @@
                 .then(snapshot => {
                   if (!snapshot.exists()) {
                     database.ref('users/' + userUid).set({
-                      email: signupEmail,
+                      email: result.user.email,
                       totalBooksPurchased: 0,
                       totalBooksSold: 0
                     });
                   }
                 })
-
-
                 .catch(error => {
                   console.error("Error checking user data:", error.message);
                 });
 
-                this.signupEmail = "";
-                this.signupPassword = "";
+              this.signupEmail = "";
+              this.signupPassword = "";
             })
             .catch(error => {
               console.error("Google sign-in error:", error.message);
@@ -272,7 +268,7 @@
             const userUid = userCredential.user.uid;
             const database = firebase.database();
             database.ref('users/' + userUid).set({
-              email: signupEmail,
+              email: userCredential.user.email,
               totalBooksPurchased: 0,
               totalBooksSold: 0
             });
