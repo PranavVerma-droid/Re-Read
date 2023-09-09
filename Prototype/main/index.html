@@ -91,11 +91,13 @@
           v-for="product in allProducts"
           :key="product.id"
           class="bg-white p-4 shadow-md rounded-lg"
-          style="background-color: #F4FDFF;"
+          style="background-color: #F4FDFF; display: flex;"
         >
-          <h3 class="text-lg font-semibold mb-2">{{ product.title }}</h3>
-          <p class="text-gray-600">{{ product.description }}</p>
-          <button class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md">Add to Cart</button>
+          <div style="align-items: start; width: 300px;"><img :src="product.img" style="width: 120px; height: auto;"></div>
+          <div style="align-items: end;"><h3 class="text-lg font-semibold mb-2">{{ product.title }}</h3>
+            <button class="mt-2 bg-blue-500 text-white px-4 py-2 rounded-md">Add to Cart</button></div>
+          
+          
         </div>
       </div>
     </div>
@@ -141,7 +143,7 @@
                 products.push({
                   id: doc.id,
                   title: data.title,
-                  description: data.description
+                  img: data.img
                 });
               });
               this[targetArray] = products;
