@@ -33,7 +33,6 @@
       <ul class="navbar-items">
         <li><a href="index.html" class="navbar-item">Home</a></li>
         <li><a href="" class="navbar-item">All Genre</a></li>
-        <li><a href="" class="navbar-item">Manga</a></li>
         <li><a href="" class="navbar-item">Fiction</a></li>
         <li><a href="" class="navbar-item">Non Fiction</a></li>
         <li><a href="" class="navbar-item">Contact</a></li>
@@ -92,6 +91,7 @@
           v-for="product in allProducts"
           :key="product.id"
           class="bg-white p-4 shadow-md rounded-lg"
+          style="background-color: #F0EEE4;"
         >
           <h3 class="text-lg font-semibold mb-2">{{ product.title }}</h3>
           <p class="text-gray-600">{{ product.description }}</p>
