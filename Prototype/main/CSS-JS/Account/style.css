@@ -52,6 +52,12 @@
     .navbar-open {
       display: flex;
     }
+
+    
+    .search {
+      display: none;
+    }
+    
     .navbar-item {
       padding: 12px 20px;
       color: #333;
